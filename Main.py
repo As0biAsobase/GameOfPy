@@ -1,5 +1,8 @@
 from Interface import Interface
 
-if __name__ == "__main__":
+def main():
     interface = Interface()
     interface.draw()
+
+if __name__ == "__main__":
+    main()

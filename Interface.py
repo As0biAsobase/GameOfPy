@@ -1,6 +1,10 @@
 import pygame
 import copy
+import numpy as np
+
 from Grid import Grid
+from Cell import Cell
+
 class Interface():
     BLACK = (0, 0, 0)
     WHITE = (200, 200, 200)
@@ -20,6 +24,7 @@ class Interface():
         # Initialize grid
         grid = Grid(250, 250)
 
+
         # Loop until the user clicks the close button.
         done = False
 
@@ -27,7 +32,9 @@ class Interface():
         clock = pygame.time.Clock()
 
         # -------- Main Program Loop -----------
-        while not done:
+        i = 0
+        while i<10:
+            i += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
@@ -35,8 +42,8 @@ class Interface():
             # Set the screen background
             screen.fill(Interface.BLACK)
 
-            # Copy grid to preserve state throughout checks
-            grid_new = copy.deepcopy(grid)
+            # Create anither grid to preserve state throughout checks
+            grid_new = np.array([[Cell(mode="zeroes") for row in range(grid.height)] for column in range(grid.width)])
 
             # Draw the grid
             for row in range(grid.height):
@@ -44,22 +51,24 @@ class Interface():
                     # Check if cell should die in next iteration and change color
                     if grid.is_dead(row, column):
                         color = Interface.BLACK
-                        grid_new.grid[row][column].value = 0
+                        grid_new[row][column].value = 0
                     else:
                         color = Interface.WHITE
-                        grid_new.grid[row][column].value = 1
+                        grid_new[row][column].value = 1
                     # Draw rectangle
+
                     pygame.draw.rect(screen, color, [
-                        (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
-                        (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
+                            (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
+                            (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
+
 
             # update grid with the new state
-            grid = grid_new
+            grid.grid = grid_new
             # Limit to 60 frames per second
             clock.tick(60)
 
             # Update the screen
-            pygame.display.flip()
+            pygame.display.update()
 
         # Prevent hang if idle
         pygame.quit()
