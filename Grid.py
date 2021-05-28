@@ -1,24 +1,28 @@
-from Cell import Cell
 import numpy as np
+import random 
 
 class Grid():
-    def __init__(self, width, height):
+    def __init__(self, width, height, mode="default"):
         self.width = width
         self.height = height
-        # Initialize 2d grid of cells
-        self.grid = np.array([[Cell() for _ in range(height)] for _ in range(width)])
+        # Initialize 2d grid of cells depending on the mode provided
+        if mode == "default":
+            self.grid = np.array([[random.choice([0, 1]) for _ in range(height)] for _ in range(width)])
+        elif mode == "zeroes":
+            self.grid = np.array([[0 for _ in range(height)] for _ in range(width)])
+        
 
     def get_number_of_alive_neighbours(neighbours):
         alive = 0
         for each in neighbours:
-            if each.value == 1:
+            if each == 1:
                 alive += 1
 
         return alive
 
     def is_dead(self, row, column):
         # Is cell dead?
-        is_dead = True if self.grid[row][column].value == 0 else False
+        is_dead = True if self.grid[row][column] == 0 else False
         # if no neighbours wrap around
         one_left = column-1 if column > 0 else self.width-1
         one_right = column+1 if column < self.width-1 else 0
