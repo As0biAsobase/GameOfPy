@@ -33,7 +33,7 @@ class Interface():
 
         # -------- Main Program Loop -----------
         i = 0
-        while i<10:
+        while i<100:
             i += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
