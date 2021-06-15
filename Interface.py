@@ -16,15 +16,17 @@ class Interface():
     HEIGHT = 4
     MARGIN = 0
 
-    # Initialize pygame
+    # Initialize pygame and start a main loop
     def draw(self):
         pygame.init()
         WINDOW_SIZE = [1000, 1000]
         screen = pygame.display.set_mode(WINDOW_SIZE)
 
         # Initialize grid
-        grid = Grid(250, 250)
+        grid = Grid(100, 100)
 
+        # Set pause
+        pause = False
 
         # Loop until the user clicks the close button.
         done = False
@@ -37,16 +39,32 @@ class Interface():
         while done != True:
             i += 1
             for event in pygame.event.get():
+                # end loop if user quits
                 if event.type == pygame.QUIT:
                     done = True
+                # if user presses button
+                elif event.type == pygame.KEYDOWN:
+                    # If it is a space bar puse the game
+                    if event.key == pygame.K_SPACE:
+                        pause = not  pause
+                    # if it is a right arrow key create one generation
+                    elif event.key == pygame.K_RIGHT:
+                        # only crete genertion if game is paused
+                        if pause == True:
+                            grid_new = self.draw_epoch(grid, screen)
+                            grid.grid = grid_new
 
-            # Set the screen background
-            screen.fill(Interface.BLACK)
+            # if game is not paused create generations normally
+            if pause == False:
+                # Set the screen background
+                screen.fill(Interface.BLACK)
 
-            grid_new = self.draw_epoch(grid, screen)
+                # generate and draw epcoch
+                grid_new = self.draw_epoch(grid, screen)
 
-            # update grid with the new state
-            grid.grid = grid_new
+                # update grid with the new state
+                grid.grid = grid_new
+
             # Limit to 60 frames per second
             clock.tick(60)
 
