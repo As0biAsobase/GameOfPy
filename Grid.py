@@ -56,6 +56,28 @@ class Grid():
 
         self.grid[120][13].value = 1
 
+
+    def revert_cell(self, row, column):
+        value = self.grid[row, column].reverse_value()
+
+        one_left = column-1 if column > 0 else self.width-1
+        one_right = column+1 if column < self.width-1 else 0
+        one_top = row-1 if row > 0 else self.height-1
+        one_bottom = row+1 if row < self.height-1 else 0
+
+        # each cell has 8 neighbours, store their coordinates in array
+        neighbours = [
+            (one_top, one_left), (one_top, column), (one_top, one_right),
+            (row, one_left),                             (row, one_right),
+            (one_bottom, one_left), (one_bottom, column), (one_bottom, one_right),
+        ]
+
+        alive = self.get_number_of_alive_neighbours(neighbours)
+        self.update_change(row, column, neighbours, value, alive)
+
+        
+        return value
+
     def get_number_of_alive_neighbours(self, neighbours):
         alive = 0
         for x, y in neighbours:

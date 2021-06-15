@@ -53,6 +53,10 @@ class Interface():
                         if pause == True:
                             grid_new = self.draw_epoch(grid, screen)
                             grid.grid = grid_new
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+                    if pause == True: 
+                        pos = pygame.mouse.get_pos() 
+                        self.update_cell(grid, screen, pos)
 
             # if game is not paused create generations normally
             if pause == False:
@@ -76,6 +80,22 @@ class Interface():
         # Prevent hang if idle
         pygame.quit()
 
+    def update_cell(self, grid, screen, pos):
+        # calculate which cell should be updated
+        horizontal, vertical = pos 
+        column = horizontal // Interface.WIDTH 
+        row = vertical // Interface.HEIGHT
+
+        if grid.revert_cell(row, column) == 0:
+            color = Interface.BLACK
+        else:
+            color = Interface.WHITE
+
+        rect = pygame.draw.rect(screen, color, [
+                                    (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
+                                    (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
+
+        pygame.display.update(rect)
 
     def draw_epoch(self, grid, screen):
         # Create another grid to preserve state throughout checks
