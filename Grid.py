@@ -6,12 +6,12 @@ class Grid():
         self.width = width
         self.height = height
         # Initialize 2d grid of cells
-        self.grid = np.array([[Cell(mode="zeroes") for _ in range(height)] for _ in range(width)])
+        self.grid = np.array([[Cell() for _ in range(height)] for _ in range(width)])
 
         # 2d array to keep track of cells that might change
         self.change_grid = np.array([[1 for _ in range(height)] for _ in range(width)])
 
-        self.create_spaceship()
+        # self.create_spaceship()
         
     def create_spaceship(self):
         self.grid[105][10].value = 1

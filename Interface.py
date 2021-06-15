@@ -43,26 +43,8 @@ class Interface():
             # Set the screen background
             screen.fill(Interface.BLACK)
 
-            # Create another grid to preserve state throughout checks
-            grid_new = np.array([[Cell(mode="zeroes") for row in range(grid.height)] for column in range(grid.width)])
+            grid_new = self.draw_epoch(grid, screen)
 
-            # Draw the grid
-            for row in range(grid.height):
-                for column in range(grid.width):
-                    # check if cell is in "danger zone", i.e. can be changed on this iteration
-                    if grid.change_grid[row, column] == 1:
-                    # Check if cell should die in next iteration and change color
-                        if grid.is_dead(row, column):
-                            color = Interface.BLACK
-                            grid_new[row, column].value = 0
-                        else:
-                            color = Interface.WHITE
-                            grid_new[row, column].value = 1
-                        # Draw rectangle
-
-                        pygame.draw.rect(screen, color, [
-                                    (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
-                                    (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
             # update grid with the new state
             grid.grid = grid_new
             # Limit to 60 frames per second
@@ -71,5 +53,31 @@ class Interface():
             # Update the screen
             pygame.display.update()
 
+           
+
         # Prevent hang if idle
         pygame.quit()
+
+
+    def draw_epoch(self, grid, screen):
+        # Create another grid to preserve state throughout checks
+        grid_new = np.array([[Cell(mode="zeroes") for row in range(grid.height)] for column in range(grid.width)])
+
+        # Draw the grid
+        for row in range(grid.height):
+            for column in range(grid.width):
+                # check if cell is in "danger zone", i.e. can be changed on this iteration
+                if grid.change_grid[row, column] == 1:
+                    # Check if cell should die in next iteration and change color
+                    if grid.is_dead(row, column):
+                        color = Interface.BLACK
+                        grid_new[row, column].value = 0
+                    else:
+                        color = Interface.WHITE
+                        grid_new[row, column].value = 1
+                    # Draw rectangle
+                    pygame.draw.rect(screen, color, [
+                                    (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
+                                    (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
+
+        return grid_new
