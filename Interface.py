@@ -15,8 +15,8 @@ class Interface():
     WIDTH = 4
     HEIGHT = 4
     MARGIN = 0
-    ROWS = 100
-    COLUMNS = 100
+    ROWS = 250
+    COLUMNS = 250
 
     # Initialize pygame and start a main loop
     def draw(self):
