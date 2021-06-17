@@ -113,7 +113,7 @@ class Interface():
 
     def draw_epoch(self, grid, screen):
         # Create another grid to preserve state throughout checks
-        grid_new = np.array([[Cell(mode="zeroes") for row in range(grid.height)] for column in range(grid.width)])
+        grid_new = np.array([[Cell(mode="zeroes", width=Interface.COLUMNS, height=Interface.ROWS, row=row, column=column) for column in range(grid.height)] for row in range(grid.width)])
 
         # Draw the grid
         for row in range(grid.height):

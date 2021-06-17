@@ -6,7 +6,7 @@ class Grid():
         self.width = width
         self.height = height
         # Initialize 2d grid of cells
-        self.grid = np.array([[Cell() for _ in range(height)] for _ in range(width)])
+        self.grid = np.array([[Cell(width=width, height=height, row=y, column=x) for x in range(height)] for y in range(width)])
 
         # 2d array to keep track of cells that might change
         self.change_grid = np.array([[1 for _ in range(height)] for _ in range(width)])
@@ -61,31 +61,20 @@ class Grid():
         # if cell is alive - kill it, revive it otherwise
         value = self.grid[row, column].reverse_value()
 
-        one_left = column-1 if column > 0 else self.width-1
-        one_right = column+1 if column < self.width-1 else 0
-        one_top = row-1 if row > 0 else self.height-1
-        one_bottom = row+1 if row < self.height-1 else 0
-
-        neighbours = [
-            (one_top, one_left), (one_top, column), (one_top, one_right),
-            (row, one_left),                             (row, one_right),
-            (one_bottom, one_left), (one_bottom, column), (one_bottom, one_right),
-        ]
-
+        neighbours = self.grid[row, column].neighbours
         alive = self.get_number_of_alive_neighbours(neighbours)
         self.update_change(row, column, neighbours, value, alive)
 
-        
         return value
 
     # kill all cells on the grid
     def clear_grid(self):
-        self.grid = np.array([[Cell(mode="zeroes") for _ in range(self.height)] for _ in range(self.width)])
+        self.grid = np.array([[Cell(width=self.width, height=self.height, row=y, column=x, mode="zeroes") for x in range(self.height)] for y in range(self.width)])
         self.change_grid = np.array([[1 for _ in range(self.height)] for _ in range(self.width)]) 
 
     # generate states for cells randomly
     def generate_random_grid(self):
-        self.grid = np.array([[Cell() for _ in range(self.height)] for _ in range(self.width)])
+        self.grid = np.array([[Cell(width=self.width, height=self.height, row=y, column=x) for x in range(self.height)] for y in range(self.width)])
         self.change_grid = np.array([[1 for _ in range(self.height)] for _ in range(self.width)])
 
 
@@ -99,24 +88,13 @@ class Grid():
     def is_dead(self, row, column):
         # Is cell dead?
         is_dead = True if self.grid[row, column].value == 0 else False
-        # if no neighbours wrap around
-        one_left = column-1 if column > 0 else self.width-1
-        one_right = column+1 if column < self.width-1 else 0
-        one_top = row-1 if row > 0 else self.height-1
-        one_bottom = row+1 if row < self.height-1 else 0
-
-        # each cell has 8 neighbours, store their coordinates in array
-        neighbours = [
-            (one_top, one_left), (one_top, column), (one_top, one_right),
-            (row, one_left),                             (row, one_right),
-            (one_bottom, one_left), (one_bottom, column), (one_bottom, one_right),
-        ]
-
+        
         # calculate number of alive neighbours
+        neighbours = self.grid[row, column].neighbours
         alive = self.get_number_of_alive_neighbours(neighbours)
 
         resurrected = 0
-        if is_dead == True: # Any dead cell
+        if is_dead: # Any dead cell
             if alive == 3: # with three live neighbours
                 is_dead = False #becomes a live cell.
                 resurrected = 1
