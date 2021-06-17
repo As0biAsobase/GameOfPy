@@ -15,6 +15,8 @@ class Interface():
     WIDTH = 4
     HEIGHT = 4
     MARGIN = 0
+    ROWS = 100
+    COLUMNS = 100
 
     # Initialize pygame and start a main loop
     def draw(self):
@@ -23,7 +25,7 @@ class Interface():
         screen = pygame.display.set_mode(WINDOW_SIZE)
 
         # Initialize grid
-        grid = Grid(100, 100)
+        grid = Grid(Interface.ROWS, Interface.COLUMNS)
 
         # Set pause
         pause = False
@@ -53,9 +55,19 @@ class Interface():
                         if pause == True:
                             grid_new = self.draw_epoch(grid, screen)
                             grid.grid = grid_new
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+                    # if DELETE key was pressed clear the grid
+                    elif event.key == pygame.K_DELETE:
+                        grid.clear_grid()
+                    # if an up arrow key was pressed generae new random grid
+                    elif event.key == pygame.K_UP:
+                        grid.generate_random_grid()
+                # check if mouse button was pressed
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    # only do that in pause mode
                     if pause == True: 
+                        # record coursor position
                         pos = pygame.mouse.get_pos() 
+                        # updae cell at which mouse points
                         self.update_cell(grid, screen, pos)
 
             # if game is not paused create generations normally
@@ -75,27 +87,29 @@ class Interface():
             # Update the screen
             pygame.display.update()
 
-           
-
         # Prevent hang if idle
         pygame.quit()
 
     def update_cell(self, grid, screen, pos):
-        # calculate which cell should be updated
+        # unpack mouse positions
         horizontal, vertical = pos 
-        column = horizontal // Interface.WIDTH 
-        row = vertical // Interface.HEIGHT
+        # check if a cell on a grid was clicked
+        if horizontal <= Interface.WIDTH * Interface.ROWS and vertical <= Interface.WIDTH*Interface.COLUMNS:
+            # calculate which cell should b updated
+            column = horizontal // Interface.WIDTH 
+            row = vertical // Interface.HEIGHT
 
-        if grid.revert_cell(row, column) == 0:
-            color = Interface.BLACK
-        else:
-            color = Interface.WHITE
+            # get new cell state to draw
+            if grid.revert_cell(row, column) == 0:
+                color = Interface.BLACK
+            else:
+                color = Interface.WHITE
 
-        rect = pygame.draw.rect(screen, color, [
-                                    (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
-                                    (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
+            rect = pygame.draw.rect(screen, color, [
+                                        (Interface.MARGIN + Interface.WIDTH) * column + Interface.MARGIN,
+                                        (Interface.MARGIN + Interface.HEIGHT) * row + Interface.MARGIN, Interface.WIDTH, Interface.HEIGHT])
 
-        pygame.display.update(rect)
+            pygame.display.update(rect)
 
     def draw_epoch(self, grid, screen):
         # Create another grid to preserve state throughout checks

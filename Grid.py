@@ -56,8 +56,9 @@ class Grid():
 
         self.grid[120][13].value = 1
 
-
+    # kill or revive specific cell 
     def revert_cell(self, row, column):
+        # if cell is alive - kill it, revive it otherwise
         value = self.grid[row, column].reverse_value()
 
         one_left = column-1 if column > 0 else self.width-1
@@ -65,7 +66,6 @@ class Grid():
         one_top = row-1 if row > 0 else self.height-1
         one_bottom = row+1 if row < self.height-1 else 0
 
-        # each cell has 8 neighbours, store their coordinates in array
         neighbours = [
             (one_top, one_left), (one_top, column), (one_top, one_right),
             (row, one_left),                             (row, one_right),
@@ -77,6 +77,17 @@ class Grid():
 
         
         return value
+
+    # kill all cells on the grid
+    def clear_grid(self):
+        self.grid = np.array([[Cell(mode="zeroes") for _ in range(self.height)] for _ in range(self.width)])
+        self.change_grid = np.array([[1 for _ in range(self.height)] for _ in range(self.width)]) 
+
+    # generate states for cells randomly
+    def generate_random_grid(self):
+        self.grid = np.array([[Cell() for _ in range(self.height)] for _ in range(self.width)])
+        self.change_grid = np.array([[1 for _ in range(self.height)] for _ in range(self.width)])
+
 
     def get_number_of_alive_neighbours(self, neighbours):
         alive = 0
