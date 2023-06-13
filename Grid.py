@@ -13,6 +13,7 @@ class Grid():
 
         # self.create_spaceship()
         
+    # Functions creates a spaceship shape for testing
     def create_spaceship(self):
         self.grid[105][10].value = 1
         self.grid[105][11].value = 1
@@ -76,7 +77,6 @@ class Grid():
     def generate_random_grid(self):
         self.grid = np.array([[Cell(width=self.width, height=self.height, row=y, column=x) for x in range(self.height)] for y in range(self.width)])
         self.change_grid = np.array([[1 for _ in range(self.height)] for _ in range(self.width)])
-
 
     def get_number_of_alive_neighbours(self, neighbours):
         alive = 0

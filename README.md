@@ -5,13 +5,16 @@ Project uses naive approach, where each epoch state of each cell is calculated s
 - Cells "Wrap around", i.e. cells in the leftmost column have neighbours in the rightmost column 
 - Number of checks made each generation is reduced through mantaining list of cells that might change, i.e. we know for certain that dead cell with no alive neighbours will stay dead for next generation, so we don't need to check it untill one if it neighbours becomes alive. 
 
-#### Controls:
+### Controls:
 <kbd>Space</kbd> - Pause simulation
-<kbd>→</kbd> - Show next generation (oly works in pause)
+
+<kbd>→</kbd> - Show next generation (only works in pause)
+
 <kbd>Del</kbd> - Clear the grid
+
 <kbd>↑</kbd> - Generate new random grid
 
-#### To run:
+### To run:
 
 1. Clone the repository
 
